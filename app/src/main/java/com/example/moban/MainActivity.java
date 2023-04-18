@@ -18,29 +18,36 @@ import com.example.moban.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CalendarView;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
+    private CalendarView mCalendarView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        // Finde das Kalender-View-Element in unserem Layout
+        mCalendarView = findViewById(R.id.calendarView);
 
-        setSupportActionBar(binding.toolbar);
+        // Setze das Datum des Kalenders auf den heutigen Tag
+        mCalendarView.setDate(Calendar.getInstance().getTimeInMillis());
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAnchorView(R.id.fab)
-                        .setAction("Action", null).show();
-            }
-        });
+        // Deaktiviere die Möglichkeit, Tage in der Vergangenheit auszuwählen
+        mCalendarView.setMinDate(System.currentTimeMillis() - 1000);
+
+        // Deaktiviere die Möglichkeit, Tage in der Zukunft auszuwählen
+        Calendar maxCal = Calendar.getInstance();
+        maxCal.set(Calendar.MONTH, maxCal.get(Calendar.MONTH) + 1);
+        maxCal.set(Calendar.DAY_OF_MONTH, 1);
+        mCalendarView.setMaxDate(maxCal.getTimeInMillis() - 1000);
     }
 
     @Override
