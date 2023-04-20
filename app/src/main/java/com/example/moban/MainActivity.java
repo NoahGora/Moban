@@ -20,8 +20,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Hole eine Referenz auf den Kalender-View
-        CalendarView calendarView = findViewById(R.id.calendarView);
+        // Setze den Kalender-View in den Wochenmodus
+        CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
+
+        // Setze die maximale Anzahl an Tage, die im Kalender angezeigt werden sollen
+        calendarView.setShowWeekNumber(true);
+
+        // Begrenze die Größe des Kalenders auf eine Woche
+        calendarView.setMinDate(System.currentTimeMillis() - 1000);
+        calendarView.setMaxDate(System.currentTimeMillis() + 604800000L);
 
         // Erstelle ein Calendar-Objekt und setze es auf die aktuelle Zeit
         Calendar calendar = Calendar.getInstance();
@@ -41,10 +48,7 @@ public class MainActivity extends AppCompatActivity {
         long maxDate = calendar.getTimeInMillis();
         calendarView.setMaxDate(maxDate);
 
-        // Setze den Kalender-View in den Wochenmodus
-        calendarView.setCalendarDisplayMode(CalendarMode.WEEK);
-
-        // Setze das erste Wochentag auf den aktuellen Tag
+        // Setze den ersten Wochentag auf den aktuellen Tag
         calendarView.setFirstDayOfWeek(calendar.getFirstDayOfWeek());
 
         // Reagiere auf Scroll-Ereignisse, um das maximale Datum zu aktualisieren
