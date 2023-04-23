@@ -68,7 +68,11 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < weekdays.length; i++) {
             TextView dayText = new TextView(this);
+
+            // Das Datum für den jeweiligen Wochentag erhalten
+            calendar.set(Calendar.DAY_OF_WEEK, i + 2);
             dayText.setText(String.format(Locale.getDefault(), "%02d", calendar.get(Calendar.DAY_OF_MONTH)));
+
             dayText.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.WRAP_CONTENT));
@@ -87,8 +91,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             dayRow.addView(dayText);
-
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
         tableLayout.addView(dayRow);
