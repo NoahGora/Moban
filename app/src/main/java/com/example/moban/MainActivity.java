@@ -1,69 +1,80 @@
 package com.example.moban;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.CalendarView;
-import android.widget.LinearLayout;
-
-import android.os.Bundle;
-import android.widget.CalendarView;
-
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    private TableLayout tableLayout;
+    private String[] weekDays = {"Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Setze den Kalender-View in den Wochenmodus
-        CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
+        tableLayout = findViewById(R.id.tableLayout);
 
-        // Setze die maximale Anzahl an Tage, die im Kalender angezeigt werden sollen
-        calendarView.setShowWeekNumber(true);
+        // Add current date
+        TextView currentDateView = findViewById(R.id.currentDate);
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+        currentDateView.setText(dateFormat.format(Calendar.getInstance().getTime()));
 
-        // Begrenze die Größe des Kalenders auf eine Woche
-        calendarView.setMinDate(System.currentTimeMillis() - 1000);
-        calendarView.setMaxDate(System.currentTimeMillis() + 604800000L);
+        // Die Tabelle erstellen
+        TableLayout tableLayout = findViewById(R.id.tableLayout);
 
-        // Erstelle ein Calendar-Objekt und setze es auf die aktuelle Zeit
+// Die erste Zeile der Tabelle erstellen (Wochentage)
+        TableRow headerRow = new TableRow(this);
+        headerRow.setLayoutParams(new TableLayout.LayoutParams(
+                TableLayout.LayoutParams.MATCH_PARENT,
+                TableLayout.LayoutParams.WRAP_CONTENT));
+
+        String[] weekdays = {"Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"};
+
+        for (String weekday : weekdays) {
+            TextView headerText = new TextView(this);
+            headerText.setText(weekday);
+            headerText.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.WRAP_CONTENT));
+            headerText.setGravity(Gravity.CENTER);
+            headerText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            headerRow.addView(headerText);
+        }
+
+        tableLayout.addView(headerRow);
+
+// Die zweite Zeile der Tabelle erstellen (Tag)
+        TableRow dayRow = new TableRow(this);
+        dayRow.setLayoutParams(new TableLayout.LayoutParams(
+                TableLayout.LayoutParams.MATCH_PARENT,
+                TableLayout.LayoutParams.WRAP_CONTENT));
+
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
 
-        // Setze das aktuelle Datum als ausgewähltes Datum im Kalender
-        calendarView.setDate(System.currentTimeMillis());
+        for (int i = 0; i < weekdays.length; i++) {
+            TextView dayText = new TextView(this);
+            dayText.setText(String.format(Locale.getDefault(), "%02d", calendar.get(Calendar.DAY_OF_MONTH)));
+            dayText.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.WRAP_CONTENT));
+            dayText.setGravity(Gravity.CENTER);
+            dayText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            dayRow.addView(dayText);
 
-        // Setze das minimale Datum auf den Anfang der aktuellen Woche
-        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-        long minDate = calendar.getTimeInMillis();
-        calendarView.setMinDate(minDate);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
 
-        // Setze das maximale Datum auf das Ende der aktuellen Woche
-        calendar.add(Calendar.WEEK_OF_YEAR, 1);
-        calendar.add(Calendar.DAY_OF_WEEK, -1);
-        long maxDate = calendar.getTimeInMillis();
-        calendarView.setMaxDate(maxDate);
-
-        // Setze den ersten Wochentag auf den aktuellen Tag
-        calendarView.setFirstDayOfWeek(calendar.getFirstDayOfWeek());
-
-        // Reagiere auf Scroll-Ereignisse, um das maximale Datum zu aktualisieren
-        calendarView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View view, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                // Wenn der Benutzer nach links scrollt, aktualisiere das maximale Datum des Kalenders
-                if (scrollX < oldScrollX) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(calendarView.getMaxDate());
-                    calendar.add(Calendar.DAY_OF_YEAR, 1);
-                    calendarView.setMaxDate(calendar.getTimeInMillis());
-                }
-            }
-        });
+        tableLayout.addView(dayRow);
     }
-}
-
+    }
