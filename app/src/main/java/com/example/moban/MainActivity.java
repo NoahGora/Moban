@@ -3,10 +3,14 @@ package com.example.moban;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -70,6 +74,18 @@ public class MainActivity extends AppCompatActivity {
                     TableRow.LayoutParams.WRAP_CONTENT));
             dayText.setGravity(Gravity.CENTER);
             dayText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            dayText.setTag(calendar.getTimeInMillis()); // Das Datum als Tag speichern
+            int finalI = i;
+            dayText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Snackbar anzeigen, wenn die Zelle geklickt wird
+                    Calendar clickedCalendar = Calendar.getInstance();
+                    clickedCalendar.setTimeInMillis((long) v.getTag());
+                    String message = weekdays[finalI] + ", " + clickedCalendar.get(Calendar.DAY_OF_MONTH);
+                    Snackbar.make(tableLayout, message, Snackbar.LENGTH_SHORT).show();
+                }
+            });
             dayRow.addView(dayText);
 
             calendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -77,4 +93,4 @@ public class MainActivity extends AppCompatActivity {
 
         tableLayout.addView(dayRow);
     }
-    }
+}
