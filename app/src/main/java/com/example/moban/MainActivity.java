@@ -3,10 +3,15 @@ package com.example.moban;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -75,6 +80,30 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }
+        
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout_menu_item:
+                // handle logout action
+                Toast.makeText(this, "Account abmelden ausgewählt", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.request_leave_menu_item:
+                // handle request leave action
+                Toast.makeText(this, "Urlaubstage beantragen ausgewählt", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }
 
