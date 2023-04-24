@@ -30,13 +30,23 @@ public class MainActivity extends AppCompatActivity {
     private static final int NUM_COLS = 7;
     private TableLayout tableLayout;
 
+    private TextView currentDateTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        currentDateTextView = findViewById(R.id.current_date_text_view);
+
+        // Set current date
+        Calendar calendar = Calendar.getInstance();
+        currentDateTextView.setText(calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.GERMAN) + ", " + calendar.get(Calendar.DAY_OF_MONTH) + "." + (calendar.get(Calendar.MONTH) + 1) + "." + calendar.get(Calendar.YEAR));
+
+
         tableLayout = findViewById(R.id.table_layout);
         createTable();
+
     }
 
     private void createTable() {
@@ -80,30 +90,10 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }
-        
+
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.logout_menu_item:
-                // handle logout action
-                Toast.makeText(this, "Account abmelden ausgewählt", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.request_leave_menu_item:
-                // handle request leave action
-                Toast.makeText(this, "Urlaubstage beantragen ausgewählt", Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
 }
 
