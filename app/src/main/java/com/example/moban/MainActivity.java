@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,80 +20,61 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String[] WEEKDAYS = {"Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"};
+    private static final int NUM_ROWS = 2;
+    private static final int NUM_COLS = 7;
     private TableLayout tableLayout;
-    private String[] weekDays = {"Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tableLayout = findViewById(R.id.tableLayout);
+        tableLayout = findViewById(R.id.table_layout);
+        createTable();
+    }
 
-        // Add current date
-        TextView currentDateView = findViewById(R.id.currentDate);
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-        currentDateView.setText(dateFormat.format(Calendar.getInstance().getTime()));
-
-        // Die Tabelle erstellen
-        TableLayout tableLayout = findViewById(R.id.tableLayout);
-
-// Die erste Zeile der Tabelle erstellen (Wochentage)
+    private void createTable() {
+        // Add header row
         TableRow headerRow = new TableRow(this);
-        headerRow.setLayoutParams(new TableLayout.LayoutParams(
-                TableLayout.LayoutParams.MATCH_PARENT,
-                TableLayout.LayoutParams.WRAP_CONTENT));
-
-        String[] weekdays = {"Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"};
-
-        for (String weekday : weekdays) {
-            TextView headerText = new TextView(this);
-            headerText.setText(weekday);
-            headerText.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.WRAP_CONTENT));
-            headerText.setGravity(Gravity.CENTER);
-            headerText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-            headerRow.addView(headerText);
+        for (int j = 0; j < NUM_COLS; j++) {
+            TextView cell = new TextView(this);
+            cell.setText(WEEKDAYS[j]);
+            cell.setGravity(Gravity.CENTER);
+            headerRow.addView(cell);
         }
-
         tableLayout.addView(headerRow);
 
-// Die zweite Zeile der Tabelle erstellen (Tag)
-        TableRow dayRow = new TableRow(this);
-        dayRow.setLayoutParams(new TableLayout.LayoutParams(
-                TableLayout.LayoutParams.MATCH_PARENT,
-                TableLayout.LayoutParams.WRAP_CONTENT));
-
+        // Add date row
+        TableRow dateRow = new TableRow(this);
         Calendar calendar = Calendar.getInstance();
-
-        for (int i = 0; i < weekdays.length; i++) {
-            TextView dayText = new TextView(this);
-
-            // Das Datum für den jeweiligen Wochentag erhalten
-            calendar.set(Calendar.DAY_OF_WEEK, i + 2);
-            dayText.setText(String.format(Locale.getDefault(), "%02d", calendar.get(Calendar.DAY_OF_MONTH)));
-
-            dayText.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.WRAP_CONTENT));
-            dayText.setGravity(Gravity.CENTER);
-            dayText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            dayText.setTag(calendar.getTimeInMillis()); // Das Datum als Tag speichern
-            int finalI = i;
-            dayText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Snackbar anzeigen, wenn die Zelle geklickt wird
-                    Calendar clickedCalendar = Calendar.getInstance();
-                    clickedCalendar.setTimeInMillis((long) v.getTag());
-                    String message = weekdays[finalI] + ", " + clickedCalendar.get(Calendar.DAY_OF_MONTH);
-                    Snackbar.make(tableLayout, message, Snackbar.LENGTH_SHORT).show();
-                }
-            });
-            dayRow.addView(dayText);
+        for (int j = 0; j < NUM_COLS; j++) {
+            TextView cell = new TextView(this);
+            cell.setText(String.format(Locale.GERMAN, "%d", calendar.get(Calendar.DAY_OF_MONTH)));
+            cell.setGravity(Gravity.CENTER);
+            dateRow.addView(cell);
+            calendar.add(Calendar.DATE, 1);
         }
+        tableLayout.addView(dateRow);
 
-        tableLayout.addView(dayRow);
+        // Set click listeners for each cell
+        for (int i = 0; i < NUM_ROWS; i++) {
+            TableRow row = (TableRow) tableLayout.getChildAt(i);
+            for (int j = 0; j < NUM_COLS; j++) {
+                final TextView cell = (TextView) row.getChildAt(j);
+                final String weekday = WEEKDAYS[j];
+                final String date = cell.getText().toString();
+                cell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String message = String.format("%s, %s %d", weekday,
+                                DateFormatSymbols.getInstance(Locale.GERMAN).getMonths()[Calendar.getInstance().get(Calendar.MONTH)],
+                                Integer.parseInt(date));
+                        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }
     }
 }
+
