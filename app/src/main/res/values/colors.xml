@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="task_list_background">#FFFFFFFF</color>
+    <color name="new_task_list_background">#F3F3F3F3</color>
+    <color name="new_task_send">#6699ff</color>
+
 </resources>
