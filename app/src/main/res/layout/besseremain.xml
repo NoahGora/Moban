@@ -20,6 +20,7 @@
         />
 
     <LinearLayout
+        android:id="@+id/myLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -40,7 +41,7 @@
             android:id="@+id/send_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@mipmap/sendCircle"
+            android:src="@mipmap/sendcircle"
             app:tint="@color/new_task_send"
             />
 
