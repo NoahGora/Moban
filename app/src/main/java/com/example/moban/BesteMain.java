@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
+
 public class BesteMain<val> extends AppCompatActivity {
 
     EditText newTaskEditText;
